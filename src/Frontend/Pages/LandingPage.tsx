@@ -17,11 +17,7 @@ export const enum LandingPageZIndex {
 }
 
 const links = {
-  twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
-  blog: 'https://blog.zkga.me/',
-  discord: 'https://discord.gg/2u2TN6v8r6',
-  github: 'https://github.com/darkforest-eth',
+  github: 'https://github.com/patrick-ogrady/darkforest-local',
 };
 
 export default function LandingPage() {
@@ -41,11 +37,10 @@ export default function LandingPage() {
             <EmSpacer height={1.5} />
 
             <p>
-              <White>Dark Forest</White>
+              <White>WAGMI Dark Forest</White>
               <br />
               <Text>zkSNARK space warfare</Text>
               <br />
-              <Text>Round 4: Society Eggnog - Lightning Round</Text>
             </p>
 
             <Spacer height={16} />
@@ -63,148 +58,16 @@ export default function LandingPage() {
 
           <EmSpacer height={3} />
 
-          <div style={{ color: dfstyles.colors.text }}>
-            <HallOfFameTitle>Space Masters</HallOfFameTitle>
-            <Spacer height={8} />
-            <table>
-              <tbody>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.1
-                  </td>
-                  <td>
-                    02/22/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <a href='https://twitter.com/zoink'>Dylan Field</a>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.2
-                  </td>
-                  <td>
-                    06/24/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>Nate Foss</td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.3
-                  </td>
-                  <td>
-                    08/07/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/hideandcleanse'>@hideandcleanse</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.4
-                  </td>
-                  <td>
-                    10/02/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.5
-                  </td>
-                  <td>
-                    12/25/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>0xb05d9542...</td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.6 round 1
-                  </td>
-                  <td>
-                    05/22/<HideSmall>20</HideSmall>21
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/adietrichs'>Ansgar Dietrichs</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.6 round 2
-                  </td>
-                  <td>
-                    07/07/<HideSmall>20</HideSmall>21
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.6 round 3
-                  </td>
-                  <td>
-                    08/22/<HideSmall>20</HideSmall>21
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/dropswap_gg'>@dropswap_gg</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.6 round 4
-                  </td>
-                  <td>
-                    10/01/<HideSmall>20</HideSmall>21
-                  </td>
-                  <td>t.b.d</td>
-                </TRow>
-              </tbody>
-            </table>
-          </div>
-
-          <Spacer height={32} />
-
-          <EmailWrapper>
-            <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
-          </EmailWrapper>
-
           <Spacer height={16} />
 
           <VariousLinksContainer>
-            <TextLinks>
-              <a href={links.email}>email</a>
-              <Spacer width={4} />
-              <Sub>-</Sub>
-              <Spacer width={8} />
-              <a href={links.blog}>blog</a>
-            </TextLinks>
-
-            <Spacer width={8} />
-
             <IconLinks>
-              <a className={'link-twitter'} href={links.twitter}>
-                <span className={'icon-twitter'}></span>
-              </a>
-              <Spacer width={8} />
-              <a className={'link-discord'} href={links.discord}>
-                <span className={'icon-discord'}></span>
-              </a>
-              <Spacer width={8} />
               <a className={'link-github'} href={links.github}>
                 <span className={'icon-github'}></span>
               </a>
             </IconLinks>
           </VariousLinksContainer>
         </MainContentContainer>
-
-        <Spacer height={128} />
-
-        <LeadboardDisplay />
-
-        <Spacer height={256} />
       </Page>
     </>
   );

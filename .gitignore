@@ -30,3 +30,5 @@ declarations
 
 # Local Netlify folder
 .netlify
+
+*.swp
