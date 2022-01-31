@@ -102,6 +102,7 @@ export async function loadScoringContract(
 }
 
 export function getEthConnection(): Promise<EthConnection> {
+  // TODO: SET WAGMI API HERE
   const isProd = process.env.NODE_ENV === 'production';
   const defaultUrl = process.env.DEFAULT_RPC as string;
 

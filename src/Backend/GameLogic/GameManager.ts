@@ -227,6 +227,7 @@ class GameManager extends EventEmitter {
   /**
    * @todo change this to the correct timestamp each round.
    */
+  // TODO: update to something more accurate or remove
   private readonly endTimeSeconds: number = 1743587533; // jan 2022
 
   /**
