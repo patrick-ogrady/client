@@ -5,7 +5,6 @@ import {
   GPT_CREDIT_CONTRACT_ADDRESS,
   SCORING_CONTRACT_ADDRESS,
   TOKENS_CONTRACT_ADDRESS,
-  WHITELIST_CONTRACT_ADDRESS,
 } from '@darkforest_eth/contracts';
 import type {
   DarkForestCore,
@@ -13,7 +12,6 @@ import type {
   DarkForestGPTCredit,
   DarkForestScoringRound3,
   DarkForestTokens,
-  Whitelist,
 } from '@darkforest_eth/contracts/typechain';
 import {
   aggregateBulkGetter,
@@ -112,7 +110,6 @@ import {
   loadGettersContract,
   loadGptCreditContract,
   loadTokensContract,
-  loadWhitelistContract,
 } from '../Network/Blockchain';
 import { eventLogger, EventType } from '../Network/EventLogger';
 
@@ -159,10 +156,6 @@ export class ContractsAPI extends EventEmitter {
 
   get gettersContract() {
     return this.ethConnection.getContract<DarkForestGetters>(GETTERS_CONTRACT_ADDRESS);
-  }
-
-  get whitelistContract() {
-    return this.ethConnection.getContract<Whitelist>(WHITELIST_CONTRACT_ADDRESS);
   }
 
   get gptCreditContract() {
@@ -213,7 +206,7 @@ export class ContractsAPI extends EventEmitter {
     if (balance.lt(ContractsAPI.MIN_BALANCE)) {
       const notifsManager = NotificationManager.getInstance();
       notifsManager.balanceEmpty();
-      throw new Error('xDAI balance too low!');
+      throw new Error(`WGM balance too low! Send some WGM to your burner address: ${address}`);
     }
 
     const gasFeeGwei = EthersBN.from(txRequest.overrides.gasPrice || '1000000000');
@@ -1290,7 +1283,6 @@ export async function makeContractsAPI(ethConnection: EthConnection): Promise<Co
   // Could turn this into an array and iterate, but I like the explicitness
   await ethConnection.loadContract(CORE_CONTRACT_ADDRESS, loadCoreContract);
   await ethConnection.loadContract(GETTERS_CONTRACT_ADDRESS, loadGettersContract);
-  await ethConnection.loadContract(WHITELIST_CONTRACT_ADDRESS, loadWhitelistContract);
   await ethConnection.loadContract(GPT_CREDIT_CONTRACT_ADDRESS, loadGptCreditContract);
   await ethConnection.loadContract(TOKENS_CONTRACT_ADDRESS, loadTokensContract);
 

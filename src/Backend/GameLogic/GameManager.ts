@@ -1,5 +1,4 @@
 import {
-  BLOCK_EXPLORER_URL,
   MIN_PLANET_LEVEL,
   PLANET_CLAIM_MIN_LEVEL,
 } from '@darkforest_eth/constants';
@@ -83,7 +82,6 @@ import {
   ContractsAPIEvent,
   UpgradeArgs,
 } from '../../_types/darkforest/api/ContractsAPITypes';
-import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 import {
   Chunk,
   ClaimCountdownInfo,
@@ -106,11 +104,6 @@ import { eventLogger, EventType } from '../Network/EventLogger';
 import { loadLeaderboard } from '../Network/LeaderboardApi';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { loadNetworkHealth } from '../Network/NetworkHealthApi';
-import {
-  disconnectTwitter,
-  getAllTwitters,
-  verifyTwitterHandle,
-} from '../Network/UtilityServerAPI';
 import { SerializedPlugin } from '../Plugins/SerializedPlugin';
 import { ProcgenUtils } from '../Procedural/ProcgenUtils';
 import PersistentChunkStore from '../Storage/PersistentChunkStore';
@@ -578,7 +571,7 @@ class GameManager extends EventEmitter {
 
     const persistentChunkStore = await PersistentChunkStore.create(account);
 
-    terminal.current?.println('Downloading data from Ethereum blockchain...');
+    terminal.current?.println('Downloading data from WAGMI subnet...');
     terminal.current?.println('(the contract is very big. this may take a while)');
     terminal.current?.newline();
 
@@ -662,8 +655,6 @@ class GameManager extends EventEmitter {
       initialState.myGPTCredits
     );
 
-    gameManager.setPlayerTwitters(initialState.twitters);
-
     pollSetting(gameManager.getAccount(), Setting.AutoApproveNonPurchaseTransactions);
 
     persistentChunkStore.setDiagnosticUpdater(gameManager);
@@ -673,9 +664,6 @@ class GameManager extends EventEmitter {
     // 'loading game state' contract calls will be competing with events from the blockchain that
     // are happening now, which makes no sense.
     contractsAPI.setupEventListeners();
-
-    // get twitter handles
-    gameManager.refreshTwitters();
 
     // set up listeners: whenever ContractsAPI reports some game state update, do some logic
     gameManager.contractsAPI
@@ -846,10 +834,6 @@ class GameManager extends EventEmitter {
 
     const localPlayer = this.getPlayer(address);
 
-    if (localPlayer?.twitter) {
-      playerFromBlockchain.twitter = localPlayer.twitter;
-    }
-
     this.players.set(address, playerFromBlockchain);
     this.playersUpdated$.publish();
   }
@@ -953,11 +937,8 @@ class GameManager extends EventEmitter {
 
   private onTxSubmit(unminedTx: SubmittedTx): void {
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Blue);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
     this.terminal.current?.println(`) submitted`, TerminalTextStyle.Blue);
@@ -968,11 +949,8 @@ class GameManager extends EventEmitter {
   private onTxConfirmed(unminedTx: SubmittedTx) {
     const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Green);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
     this.terminal.current?.println(`) confirmed`, TerminalTextStyle.Green);
@@ -994,11 +972,8 @@ class GameManager extends EventEmitter {
   private onTxReverted(unminedTx: SubmittedTx) {
     const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Red);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
 
@@ -1049,22 +1024,6 @@ class GameManager extends EventEmitter {
    */
   public getContractAddress(): EthAddress {
     return this.contractsAPI.getContractAddress();
-  }
-
-  /**
-   * Gets the twitter handle of the given ethereum account which is associated
-   * with Dark Forest.
-   */
-  public getTwitter(address: EthAddress | undefined): string | undefined {
-    let myAddress;
-    if (!address) myAddress = this.getAccount();
-    else myAddress = address;
-
-    if (!myAddress) {
-      return undefined;
-    }
-    const twitter = this.players.get(myAddress)?.twitter;
-    return twitter;
   }
 
   /**
@@ -1484,15 +1443,6 @@ class GameManager extends EventEmitter {
   }
 
   /**
-   * Signs the given twitter handle with the private key of the current user. Used to
-   * verify that the person who owns the Dark Forest account was the one that attempted
-   * to link a twitter to their account.
-   */
-  async getSignedTwitter(twitter: string): Promise<string> {
-    return this.ethConnection.signMessage(twitter);
-  }
-
-  /**
    * Gets the private key of the burner wallet used by this account.
    */
   getPrivateKey(): string | undefined {
@@ -1619,32 +1569,6 @@ class GameManager extends EventEmitter {
     if (this.minerManager) {
       this.minerManager.setRadius(this.worldRadius);
     }
-  }
-
-  private async refreshTwitters(): Promise<void> {
-    const addressTwitters = await getAllTwitters();
-    this.setPlayerTwitters(addressTwitters);
-  }
-
-  private setPlayerTwitters(twitters: AddressTwitterMap): void {
-    for (const [address, player] of this.players.entries()) {
-      const newPlayerTwitter = twitters[address];
-      player.twitter = newPlayerTwitter;
-    }
-    this.playersUpdated$.publish();
-  }
-
-  /**
-   * Once you have posted the verification tweet - complete the twitter-account-linking
-   * process by telling the Dark Forest webserver to look at that tweet.
-   */
-  async submitVerifyTwitter(twitter: string): Promise<boolean> {
-    if (!this.account) return Promise.resolve(false);
-    const success = await verifyTwitterHandle(
-      await this.ethConnection.signMessageObject({ twitter })
-    );
-    await this.refreshTwitters();
-    return success;
   }
 
   private checkGameHasEnded(): boolean {
@@ -2505,11 +2429,6 @@ class GameManager extends EventEmitter {
     await this.refreshServerPlanetStates([locationId]);
   }
 
-  public async submitDisconnectTwitter(twitter: string) {
-    await disconnectTwitter(await this.ethConnection.signMessageObject({ twitter }));
-    await this.refreshTwitters();
-  }
-
   /**
    * The planet emoji feature is built on top of a more general 'Planet Message' system, which
    * allows players to upload pieces of data called 'Message's to planets that they own. Emojis are
@@ -2694,7 +2613,7 @@ class GameManager extends EventEmitter {
 
   /**
    * Submits a transaction to the blockchain to buy a hat for the given planet. You
-   * must own the planet. Warning costs real xdai. Hats are permanently locked to a
+   * must own the planet. Warning costs WGM. Hats are permanently locked to a
    * planet. They are purely cosmetic and a great way to BM your opponents or just
    * look your best. Just like in the real world, more money means more hat.
    */

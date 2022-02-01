@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { HideSmall, Sub, Text, White } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
@@ -146,15 +145,6 @@ const IconLinks = styled.span`
       }
       &.link-github {
         color: ${dfstyles.colors.icons.github};
-      }
-      &.link-discord {
-        color: ${dfstyles.colors.icons.discord};
-      }
-      &.link-blog {
-        color: ${dfstyles.colors.icons.blog};
-      }
-      &.link-email {
-        color: ${dfstyles.colors.icons.email};
       }
     }
   }

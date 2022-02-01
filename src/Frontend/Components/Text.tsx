@@ -1,4 +1,3 @@
-import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
 import { Artifact, ArtifactId, Planet, SubmittedTx, WorldCoords } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -73,9 +72,7 @@ export function TxLink({ tx }: { tx: SubmittedTx }) {
   return (
     <>
       <u>
-        <a onClick={() => window.open(`${BLOCK_EXPLORER_URL}/${tx.txHash}`)}>
-          View {tx.txHash.substring(0, 7)} on block explorer
-        </a>
+          {tx.txHash.substring(0, 7)}
       </u>
       .
     </>

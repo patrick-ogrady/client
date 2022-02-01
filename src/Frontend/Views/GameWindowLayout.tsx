@@ -22,7 +22,6 @@ import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
 import { PrivatePane } from '../Panes/PrivatePane';
 import { SettingsPane } from '../Panes/SettingsPane';
 import { TutorialPane } from '../Panes/TutorialPane';
-import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
 import { ZoomPane } from '../Panes/ZoomPane';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useOnUp } from '../Utils/KeyEmitters';
@@ -51,7 +50,6 @@ export function GameWindowLayout({
   const helpHook = useState<boolean>(false);
   const planetdexHook = useState<boolean>(false);
   const yourArtifactsHook = useState<boolean>(false);
-  const twitterVerifyHook = useState<boolean>(false);
   const settingsHook = useState<boolean>(false);
   const privateHook = useState<boolean>(false);
   const pluginsHook = useState<boolean>(false);
@@ -141,17 +139,10 @@ export function GameWindowLayout({
 
   return (
     <WindowWrapper>
-      <TopBarPaneContainer>
-        <BorderlessPane>
-          <TopBar twitterVerifyHook={twitterVerifyHook} />
-        </BorderlessPane>
-      </TopBarPaneContainer>
-
       {/* all modals rendered into here */}
       <div ref={modalsContainerRef}>
         <HelpPane hook={helpHook} />
         <PlanetDexPane hook={planetdexHook} />
-        <TwitterVerifyPane hook={twitterVerifyHook} />
         <SettingsPane
           ethConnection={uiManager.getEthConnection()}
           hook={settingsHook}

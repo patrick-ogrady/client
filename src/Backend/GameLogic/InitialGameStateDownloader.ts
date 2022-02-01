@@ -15,8 +15,6 @@ import { LoadingBarHandle } from '../../Frontend/Components/TextLoadingBar';
 import { MakeDarkForestTips } from '../../Frontend/Views/DarkForestTips';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
-import { tryGetAllTwitters } from '../Network/UtilityServerAPI';
 import PersistentChunkStore from '../Storage/PersistentChunkStore';
 import { ContractsAPI } from './ContractsAPI';
 
@@ -39,7 +37,6 @@ export interface InitialGameState {
   claimedCoordsMap?: Map<LocationId, ClaimedCoords>;
   planetVoyageIdMap: Map<LocationId, VoyageId[]>;
   arrivals: Map<VoyageId, QueuedArrival>;
-  twitters: AddressTwitterMap;
 }
 
 export class InitialGameStateDownloader {
@@ -172,8 +169,6 @@ export class InitialGameStateDownloader {
       yourArtifactsLoadingBar
     );
 
-    const twitters = await tryGetAllTwitters();
-
     const initialState: InitialGameState = {
       contractConstants: await contractConstants,
       players: await players,
@@ -192,7 +187,6 @@ export class InitialGameStateDownloader {
       claimedCoordsMap,
       planetVoyageIdMap,
       arrivals,
-      twitters,
     };
 
     return initialState;

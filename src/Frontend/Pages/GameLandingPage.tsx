@@ -1,5 +1,3 @@
-import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { WHITELIST_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
@@ -9,13 +7,9 @@ import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager, { GameUIManagerEvent } from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection, loadWhitelistContract } from '../../Backend/Network/Blockchain';
+import { getEthConnection } from '../../Backend/Network/Blockchain';
 import {
-  callRegisterUntilWhitelisted,
-  EmailResponse,
   requestDevFaucet,
-  submitInterestedEmail,
-  submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
 import {
   GameWindowWrapper,
@@ -39,10 +33,6 @@ const enum TerminalPromptStep {
   GENERATE_ACCOUNT,
   IMPORT_ACCOUNT,
   ACCOUNT_SET,
-  ASKING_HAS_WHITELIST_KEY,
-  ASKING_WAITLIST_EMAIL,
-  ASKING_WHITELIST_KEY,
-  ASKING_PLAYER_EMAIL,
   FETCHING_ETH_DATA,
   ASK_ADD_ACCOUNT,
   ADD_ACCOUNT,
@@ -114,7 +104,7 @@ export function GameLandingPage() {
           TerminalTextStyle.Red
         );
         terminal.current?.println('Please resolve them and refresh the page.');
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+        setStep(TerminalPromptStep.TERMINATED);
       } else {
         setStep(TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED);
       }
@@ -269,13 +259,16 @@ export function GameLandingPage() {
       try {
         const address = ethConnection?.getAddress();
         if (!address || !ethConnection) throw new Error('not logged in');
-        terminal.current?.println(`Welcome, player ${address}.`);
+        terminal.current?.println(`Welcome, player ${address}.`, TerminalTextStyle.Green);
         if (!isProd) {
           // in development, automatically get some ether from faucet
           const balance = weiToEth(await ethConnection?.loadBalance(address));
           if (balance === 0) {
             await requestDevFaucet(address);
           }
+        } else {
+          terminal.current?.println(`In WAGMI Round 1, there is no whitelist. You can start playing as soon as you send your address (${address}) WGM!`, TerminalTextStyle.Blue);
+          terminal.current?.println('If you forget to send your address WGM, you will see "low balance" errors.', TerminalTextStyle.Red);
         }
         setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {

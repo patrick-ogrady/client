@@ -9,7 +9,6 @@ import { EmSpacer } from '../CoreUI';
 import { Colored, Sub, Subber, White } from '../Text';
 import { TextPreview } from '../TextPreview';
 import { OptionalPlanetBiomeLabelAnim } from './BiomeLabels';
-import { TwitterLink } from './Labels';
 import { SpacetimeRipLabel } from './SpacetimeRipLabel';
 
 /* note that we generally prefer `Planet | undefined` over `Planet` because it
@@ -198,10 +197,6 @@ export function PlanetOwnerLabel({
   }
 
   const color = colorWithOwnerColor ? defaultColor : ProcgenUtils.getPlayerColor(planet.owner);
-  if (planet.owner && owner.value?.twitter) {
-    return <TwitterLink color={color} twitter={owner.value.twitter} />;
-  }
-
   return (
     <Colored color={color}>
       <TextPreview text={planet.owner} />

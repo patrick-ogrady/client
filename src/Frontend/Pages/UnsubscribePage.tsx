@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../Components/Button';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { BlinkCursor, HideSmall, Invisible, Sub, Text } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
@@ -51,11 +50,7 @@ const styles: {
 };
 
 const links = {
-  twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
-  blog: 'https://blog.zkga.me/',
-  telegram: 'https://t.me/zk_forest',
-  github: 'https://github.com/darkforest-eth',
+  github: 'https://github.com/patrick-ogrady/darforest-local',
 };
 
 // note: prefer styled-components when possible because semantically easier to debug
@@ -191,24 +186,9 @@ export default function UnsubscribePage() {
           </p>
         </Header>
 
-        {/* Email CTA */}
-        <EmailWrapper>
-          <EmailCTA mode={EmailCTAMode.UNSUBSCRIBE} />
-        </EmailWrapper>
-
         {/* Footer */}
         <Footer>
-          <TextLinks>
-            <a href={links.email}>email</a>
-            <a href={links.blog}>blog</a>
-          </TextLinks>
           <IconLinks>
-            <a className={'link-twitter'} href={links.twitter}>
-              <span className={'icon-twitter'}></span>
-            </a>
-            <a className={'link-discord'} href={links.telegram}>
-              <span className={'icon-discord'}></span>
-            </a>
             <a className={'link-github'} href={links.github}>
               <span className={'icon-github'}></span>
             </a>

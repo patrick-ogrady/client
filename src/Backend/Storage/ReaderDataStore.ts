@@ -15,7 +15,6 @@ import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPIT
 import { isLocatable } from '../../_types/global/GlobalTypes';
 import { arrive, updatePlanetToTime } from '../GameLogic/ArrivalUtils';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
-import { getAllTwitters } from '../Network/UtilityServerAPI';
 import PersistentChunkStore from './PersistentChunkStore';
 
 export const enum SinglePlanetDataStoreEvent {
@@ -30,20 +29,17 @@ export const enum SinglePlanetDataStoreEvent {
  */
 class ReaderDataStore {
   private readonly viewer: EthAddress | undefined;
-  private readonly addressTwitterMap: AddressTwitterMap;
   private readonly contractConstants: ContractConstants;
   private readonly contractsAPI: ContractsAPI;
   private readonly persistentChunkStore: PersistentChunkStore | undefined;
 
   private constructor(
     viewer: EthAddress | undefined,
-    addressTwitterMap: AddressTwitterMap,
     contractConstants: ContractConstants,
     contractsAPI: ContractsAPI,
     persistentChunkStore: PersistentChunkStore | undefined
   ) {
     this.viewer = viewer;
-    this.addressTwitterMap = addressTwitterMap;
     this.contractConstants = contractConstants;
     this.contractsAPI = contractsAPI;
     this.persistentChunkStore = persistentChunkStore;
@@ -60,13 +56,11 @@ class ReaderDataStore {
     viewer: EthAddress | undefined
   ): Promise<ReaderDataStore> {
     const contractsAPI = await makeContractsAPI(ethConnection);
-    const addressTwitterMap = await getAllTwitters();
     const contractConstants = await contractsAPI.getConstants();
     const persistentChunkStore = viewer && (await PersistentChunkStore.create(viewer));
 
     const singlePlanetStore = new ReaderDataStore(
       viewer,
-      addressTwitterMap,
       contractConstants,
       contractsAPI,
       persistentChunkStore
@@ -77,12 +71,6 @@ class ReaderDataStore {
 
   public getViewer(): EthAddress | undefined {
     return this.viewer;
-  }
-
-  public getTwitter(owner: EthAddress | undefined): string | undefined {
-    if (owner) {
-      return this.addressTwitterMap[owner];
-    }
   }
 
   private setPlanetLocationIfKnown(planet: Planet): void {

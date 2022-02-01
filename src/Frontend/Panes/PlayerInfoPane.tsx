@@ -38,8 +38,6 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
 
-  const [twitter, setTwitter] = useState<string | undefined>(undefined);
-
   const [rank, _setRank] = useState<number>(0);
   const [score, _setScore] = useState<number>(0);
 
@@ -63,20 +61,6 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
     };
   }, [uiManager, account]);
 
-  // sync account and twitter
-  // TODO Make this listen to an event instead
-  useEffect(() => {
-    if (!uiManager) return;
-    const updateTwitter = () => {
-      setTwitter(uiManager.getTwitter(undefined));
-    };
-
-    const intervalId = setInterval(updateTwitter, 2000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [uiManager]);
   return (
     <>
       <PlayerInfoWrapper>
@@ -91,20 +75,6 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
             <span>Silver</span>
           </TooltipTrigger>
           <span>{formatNumber(silver)}</span>
-        </div>
-        <div>
-          <TooltipTrigger name={TooltipName.TwitterHandle}>
-            <span>Handle</span>
-          </TooltipTrigger>
-          <span>
-            {twitter ? (
-              <span>@{twitter}</span>
-            ) : (
-              <span onClick={() => twitterHook[1]((b) => !b)} className='twitter-connect'>
-                Connect Twitter
-              </span>
-            )}
-          </span>
         </div>
         <div>
           <TooltipTrigger name={TooltipName.Score}>
