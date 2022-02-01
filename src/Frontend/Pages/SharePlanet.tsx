@@ -38,7 +38,6 @@ const PlanetCard = styled.div`
 interface SharePlanetData {
   planet: Planet;
   biome: number | null;
-  ownerTwitter: string | null;
 }
 
 export function SharePlanet({ match }: RouteComponentProps<{ locationId: LocationId }>) {
@@ -48,7 +47,6 @@ export function SharePlanet({ match }: RouteComponentProps<{ locationId: Locatio
     return {
       planet: loadedPlanet,
       biome: isLocatable(loadedPlanet) ? loadedPlanet.biome : null,
-      ownerTwitter: dataStore.getTwitter(loadedPlanet?.owner) || null,
     };
   }
 
@@ -78,12 +76,9 @@ export function SharePlanet({ match }: RouteComponentProps<{ locationId: Locatio
                   <Sub>{ProcgenUtils.getPlanetBlurb(data.planet)}</Sub>
                 </span>
               </p>
-              <p>{`Owner: ${data.ownerTwitter || data.planet.owner}`}</p>
+              <p>{`Owner: ${data.planet.owner}`}</p>
               <p>{`Energy: ${data.planet.energy}`}</p>
               <p>{`Biome: ${data.biome || 'unknown'}`}</p>
-              <p>
-                Find this planet in-game at <a href='/'>http://zkga.me</a> to read more!
-              </p>
             </div>
           </PlanetCard>
         );

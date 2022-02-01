@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../Components/Button';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { BlinkCursor, HideSmall, Invisible, Sub, Text } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
@@ -186,11 +185,6 @@ export default function UnsubscribePage() {
             </Sub>
           </p>
         </Header>
-
-        {/* Email CTA */}
-        <EmailWrapper>
-          <EmailCTA mode={EmailCTAMode.UNSUBSCRIBE} />
-        </EmailWrapper>
 
         {/* Footer */}
         <Footer>

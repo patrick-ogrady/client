@@ -4,14 +4,12 @@ import gettersContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGett
 import gptCreditContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
 import scoringContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestScoringRound3.json';
 import tokensContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestTokens.json';
-import whitelistContractAbiUrl from '@darkforest_eth/contracts/abis/Whitelist.json';
 import type {
   DarkForestCore,
   DarkForestGetters,
   DarkForestGPTCredit,
   DarkForestScoringRound3,
   DarkForestTokens,
-  Whitelist,
 } from '@darkforest_eth/contracts/typechain';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
 import type { providers, Wallet } from 'ethers';
@@ -57,20 +55,6 @@ export async function loadTokensContract(
   const tokensContractAbi = await fetch(tokensContractAbiUrl).then((r) => r.json());
 
   return createContract<DarkForestTokens>(address, tokensContractAbi, provider, signer);
-}
-
-/**
- * Loads the Whitelist contract, which keeps track of which players are allowed to play the game.
- * @see https://github.com/darkforest-eth/eth/blob/master/contracts/Whitelist.sol
- */
-export async function loadWhitelistContract(
-  address: string,
-  provider: providers.JsonRpcProvider,
-  signer?: Wallet
-): Promise<Whitelist> {
-  const whitelistContractAbi = await fetch(whitelistContractAbiUrl).then((r) => r.json());
-
-  return createContract<Whitelist>(address, whitelistContractAbi, provider, signer);
 }
 
 /**

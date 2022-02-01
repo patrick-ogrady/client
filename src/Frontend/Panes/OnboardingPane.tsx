@@ -49,8 +49,6 @@ function OnboardMoney({ advance }: { advance: () => void }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
 
-  const explorerAddressLink = `https://blockscout.com/poa/xdai/address/${account}`;
-
   return (
     <StyledOnboardingContent>
       <p>
@@ -58,9 +56,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
       </p>
       <p>
         Your burner wallet address is: <br />
-        <White>
-          <a onClick={() => window.open(explorerAddressLink)}>{account}</a>
-        </White>
+        <White>{account}</White>
       </p>
       <p>
         This means that when you make moves on Dark Forest,{' '}

@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { HideSmall, Sub, Text, White } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';

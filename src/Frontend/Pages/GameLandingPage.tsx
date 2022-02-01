@@ -1,5 +1,4 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { WHITELIST_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
@@ -9,13 +8,9 @@ import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager, { GameUIManagerEvent } from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection, loadWhitelistContract } from '../../Backend/Network/Blockchain';
+import { getEthConnection } from '../../Backend/Network/Blockchain';
 import {
-  callRegisterUntilWhitelisted,
-  EmailResponse,
   requestDevFaucet,
-  submitInterestedEmail,
-  submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
 import {
   GameWindowWrapper,
@@ -39,10 +34,6 @@ const enum TerminalPromptStep {
   GENERATE_ACCOUNT,
   IMPORT_ACCOUNT,
   ACCOUNT_SET,
-  ASKING_HAS_WHITELIST_KEY,
-  ASKING_WAITLIST_EMAIL,
-  ASKING_WHITELIST_KEY,
-  ASKING_PLAYER_EMAIL,
   FETCHING_ETH_DATA,
   ASK_ADD_ACCOUNT,
   ADD_ACCOUNT,
@@ -114,7 +105,7 @@ export function GameLandingPage() {
           TerminalTextStyle.Red
         );
         terminal.current?.println('Please resolve them and refresh the page.');
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+        setStep(TerminalPromptStep.TERMINATED);
       } else {
         setStep(TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED);
       }
