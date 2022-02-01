@@ -259,7 +259,7 @@ export function GameLandingPage() {
       try {
         const address = ethConnection?.getAddress();
         if (!address || !ethConnection) throw new Error('not logged in');
-        terminal.current?.println(`Welcome, player ${address}.`);
+        terminal.current?.println(`Welcome, player ${address}.`, TerminalTextStyle.Green);
         if (!isProd) {
           // in development, automatically get some ether from faucet
           const balance = weiToEth(await ethConnection?.loadBalance(address));
@@ -267,8 +267,8 @@ export function GameLandingPage() {
             await requestDevFaucet(address);
           }
         } else {
-          terminal.current?.println('To start playing, make sure to send some WGM to this account (otherwise you will get a "low balance" error)!', TerminalTextStyle.Red);
-          terminal.current?.println(`In WAGMI Round 1, there is no whitelist. You can start playing as soon as you fund your account: ${address}`, TerminalTextStyle.Blue);
+          terminal.current?.println(`In WAGMI Round 1, there is no whitelist. You can start playing as soon as you send your address (${address}) WGM!`, TerminalTextStyle.Blue);
+          terminal.current?.println('If you forget to send your address WGM, you will see "low balance" errors.', TerminalTextStyle.Red);
         }
         setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {
