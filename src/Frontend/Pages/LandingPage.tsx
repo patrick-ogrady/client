@@ -141,20 +141,8 @@ const IconLinks = styled.span`
     transition: color 0.2s;
     &:hover {
       cursor: pointer;
-      &.link-twitter {
-        color: ${dfstyles.colors.icons.twitter};
-      }
       &.link-github {
         color: ${dfstyles.colors.icons.github};
-      }
-      &.link-discord {
-        color: ${dfstyles.colors.icons.discord};
-      }
-      &.link-blog {
-        color: ${dfstyles.colors.icons.blog};
-      }
-      &.link-email {
-        color: ${dfstyles.colors.icons.email};
       }
     }
   }

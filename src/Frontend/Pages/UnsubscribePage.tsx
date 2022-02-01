@@ -51,11 +51,7 @@ const styles: {
 };
 
 const links = {
-  twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
-  blog: 'https://blog.zkga.me/',
-  telegram: 'https://t.me/zk_forest',
-  github: 'https://github.com/darkforest-eth',
+  github: 'https://github.com/patrick-ogrady/darforest-local',
 };
 
 // note: prefer styled-components when possible because semantically easier to debug
@@ -198,17 +194,7 @@ export default function UnsubscribePage() {
 
         {/* Footer */}
         <Footer>
-          <TextLinks>
-            <a href={links.email}>email</a>
-            <a href={links.blog}>blog</a>
-          </TextLinks>
           <IconLinks>
-            <a className={'link-twitter'} href={links.twitter}>
-              <span className={'icon-twitter'}></span>
-            </a>
-            <a className={'link-discord'} href={links.telegram}>
-              <span className={'icon-discord'}></span>
-            </a>
             <a className={'link-github'} href={links.github}>
               <span className={'icon-github'}></span>
             </a>
