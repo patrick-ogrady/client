@@ -24,7 +24,7 @@ export function CurrencyView() {
         credits
       </span>
       <span>
-        Credit Price: <Green>{currentCreditPrice + ' '}</Green>xDai each
+        Credit Price: <Green>{currentCreditPrice + ' '}</Green>WGM each
       </span>
       <Btn color={dfstyles.colors.dfyellow} onClick={buyMore} disabled={isBuyingCredits}>
         {isBuyingCredits ? (

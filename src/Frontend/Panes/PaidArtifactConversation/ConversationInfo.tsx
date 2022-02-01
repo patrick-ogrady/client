@@ -11,7 +11,7 @@ export function ConversationInfo(_: { questionsRemaining: number }) {
   return (
     <Container>
       {myBalance !== undefined && (
-        <span>Your xDai Wallet: {weiToEth(myBalance).toFixed(2)} xDai</span>
+        <span>Your WGM Wallet: {weiToEth(myBalance).toFixed(2)} WGM</span>
       )}
     </Container>
   );
