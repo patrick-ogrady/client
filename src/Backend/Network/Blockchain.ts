@@ -4,14 +4,12 @@ import gettersContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGett
 import gptCreditContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
 import scoringContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestScoringRound3.json';
 import tokensContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestTokens.json';
-import whitelistContractAbiUrl from '@darkforest_eth/contracts/abis/Whitelist.json';
 import type {
   DarkForestCore,
   DarkForestGetters,
   DarkForestGPTCredit,
   DarkForestScoringRound3,
   DarkForestTokens,
-  Whitelist,
 } from '@darkforest_eth/contracts/typechain';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
 import type { providers, Wallet } from 'ethers';
@@ -60,20 +58,6 @@ export async function loadTokensContract(
 }
 
 /**
- * Loads the Whitelist contract, which keeps track of which players are allowed to play the game.
- * @see https://github.com/darkforest-eth/eth/blob/master/contracts/Whitelist.sol
- */
-export async function loadWhitelistContract(
-  address: string,
-  provider: providers.JsonRpcProvider,
-  signer?: Wallet
-): Promise<Whitelist> {
-  const whitelistContractAbi = await fetch(whitelistContractAbiUrl).then((r) => r.json());
-
-  return createContract<Whitelist>(address, whitelistContractAbi, provider, signer);
-}
-
-/**
  * Loads ths GPT Credit contract, which players can pay to talk to artifacts.
  * @see https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestGPTCredit.sol
  */
@@ -108,7 +92,7 @@ export function getEthConnection(): Promise<EthConnection> {
   let url: string;
 
   if (isProd) {
-    url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || defaultUrl;
+    url = localStorage.getItem('WAGMI_RPC_ENDPOINT') || defaultUrl;
   } else {
     url = 'http://localhost:8545';
   }

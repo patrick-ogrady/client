@@ -19,7 +19,6 @@ export const settingChanged$: Monomitter<Setting> = monomitter();
  */
 
 export const enum Setting {
-  OptOutMetrics = 'OptOutMetrics',
   AutoApproveNonPurchaseTransactions = 'AutoApproveNonPurchaseTransactions',
   DrawChunkBorders = 'DrawChunkBorders',
   HighPerformanceRendering = 'HighPerformanceRendering',
@@ -64,7 +63,6 @@ function onlyInDevelopment(): string {
 }
 
 const defaultSettings: Record<Setting, string> = {
-  OptOutMetrics: onlyInDevelopment(),
   AutoApproveNonPurchaseTransactions: onlyInDevelopment(),
   DrawChunkBorders: 'false',
   HighPerformanceRendering: 'false',

@@ -1,5 +1,3 @@
-import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { WHITELIST_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
@@ -9,13 +7,9 @@ import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager, { GameUIManagerEvent } from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection, loadWhitelistContract } from '../../Backend/Network/Blockchain';
+import { getEthConnection } from '../../Backend/Network/Blockchain';
 import {
-  callRegisterUntilWhitelisted,
-  EmailResponse,
   requestDevFaucet,
-  submitInterestedEmail,
-  submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
 import {
   GameWindowWrapper,
@@ -39,10 +33,6 @@ const enum TerminalPromptStep {
   GENERATE_ACCOUNT,
   IMPORT_ACCOUNT,
   ACCOUNT_SET,
-  ASKING_HAS_WHITELIST_KEY,
-  ASKING_WAITLIST_EMAIL,
-  ASKING_WHITELIST_KEY,
-  ASKING_PLAYER_EMAIL,
   FETCHING_ETH_DATA,
   ASK_ADD_ACCOUNT,
   ADD_ACCOUNT,
@@ -114,7 +104,7 @@ export function GameLandingPage() {
           TerminalTextStyle.Red
         );
         terminal.current?.println('Please resolve them and refresh the page.');
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+        setStep(TerminalPromptStep.TERMINATED);
       } else {
         setStep(TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED);
       }
@@ -127,96 +117,6 @@ export function GameLandingPage() {
       terminal.current?.newline();
       terminal.current?.newline();
       terminal.current?.printElement(<MythicLabelText text={`                 Dark Forest`} />);
-      terminal.current?.newline();
-      terminal.current?.newline();
-
-      terminal.current?.print('    ');
-      terminal.current?.print('Version', TerminalTextStyle.Sub);
-      terminal.current?.print('    ');
-      terminal.current?.print('Date', TerminalTextStyle.Sub);
-      terminal.current?.print('              ');
-      terminal.current?.print('Champion', TerminalTextStyle.Sub);
-      terminal.current?.newline();
-
-      terminal.current?.print('    v0.1       ', TerminalTextStyle.Text);
-      terminal.current?.print('02/05/2020        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        'Dylan Field',
-        () => {
-          window.open('https://twitter.com/zoink');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-      terminal.current?.print('    v0.2       ', TerminalTextStyle.Text);
-      terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.Text);
-      terminal.current?.print('    v0.3       ', TerminalTextStyle.Text);
-      terminal.current?.print('08/07/2020        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        '@hideandcleanse',
-        () => {
-          window.open('https://twitter.com/hideandcleanse');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-      terminal.current?.print('    v0.4       ', TerminalTextStyle.Text);
-      terminal.current?.print('10/02/2020        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        'Jacob Rosenthal',
-        () => {
-          window.open('https://twitter.com/jacobrosenthal');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-      terminal.current?.print('    v0.5       ', TerminalTextStyle.Text);
-      terminal.current?.print('12/25/2020        ', TerminalTextStyle.Text);
-      terminal.current?.printElement(
-        <TextPreview
-          text={'0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9'}
-          focusedWidth={'100px'}
-          unFocusedWidth={'100px'}
-        />
-      );
-      terminal.current?.println('');
-
-      terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.Text);
-      terminal.current?.print('05/22/2021        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        'Ansgar Dietrichs',
-        () => {
-          window.open('https://twitter.com/adietrichs');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-
-      terminal.current?.print('    v0.6 r2    ', TerminalTextStyle.Text);
-      terminal.current?.print('06/28/2021        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        '@orden_gg',
-        () => {
-          window.open('https://twitter.com/orden_gg');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-
-      terminal.current?.print('    v0.6 r3    ', TerminalTextStyle.Text);
-      terminal.current?.print('08/22/2021        ', TerminalTextStyle.Text);
-      terminal.current?.printLink(
-        '@dropswap_gg',
-        () => {
-          window.open('https://twitter.com/dropswap_gg');
-        },
-        TerminalTextStyle.Text
-      );
-      terminal.current?.newline();
-
-      terminal.current?.print('    v0.6 r4    ', TerminalTextStyle.Text);
-      terminal.current?.print('10/01/2021        ', TerminalTextStyle.Text);
-      terminal.current?.print('t.b.d');
       terminal.current?.newline();
       terminal.current?.newline();
 
@@ -359,153 +259,24 @@ export function GameLandingPage() {
       try {
         const address = ethConnection?.getAddress();
         if (!address || !ethConnection) throw new Error('not logged in');
-
-        const whitelist = await ethConnection.loadContract(
-          WHITELIST_CONTRACT_ADDRESS,
-          loadWhitelistContract
-        );
-        const isWhitelisted = await whitelist.isWhitelisted(address);
-
-        terminal.current?.println('');
-        terminal.current?.print('Checking if whitelisted... ');
-
-        if (isWhitelisted) {
-          terminal.current?.println('Player whitelisted.');
-          terminal.current?.println('');
-          terminal.current?.println(`Welcome, player ${address}.`);
-          // TODO: Provide own env variable for this feature
-          if (!isProd) {
-            // in development, automatically get some ether from faucet
-            const balance = weiToEth(await ethConnection?.loadBalance(address));
-            if (balance === 0) {
-              await requestDevFaucet(address);
-            }
+        terminal.current?.println(`Welcome, player ${address}.`, TerminalTextStyle.Green);
+        if (!isProd) {
+          // in development, automatically get some ether from faucet
+          const balance = weiToEth(await ethConnection?.loadBalance(address));
+          if (balance === 0) {
+            await requestDevFaucet(address);
           }
-          setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
-          setStep(TerminalPromptStep.ASKING_HAS_WHITELIST_KEY);
+          terminal.current?.println(`In WAGMI Round 1, there is no whitelist. You can start playing as soon as you send your address (${address}) WGM!`, TerminalTextStyle.Blue);
+          terminal.current?.println('If you forget to send your address WGM, you will see "low balance" errors.', TerminalTextStyle.Red);
         }
+        setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {
-        console.error(`error connecting to whitelist: ${e}`);
-        terminal.current?.println(
-          'ERROR: Could not connect to whitelist contract. Please refresh and try again in a few minutes.',
-          TerminalTextStyle.Red
-        );
+        console.error(`error connecting to address: ${e}`);
         setStep(TerminalPromptStep.TERMINATED);
       }
     },
     [ethConnection, isProd]
-  );
-
-  const advanceStateFromAskHasWhitelistKey = useCallback(
-    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.print('Do you have a whitelist key?', TerminalTextStyle.Text);
-      terminal.current?.println(' (y/n)');
-      const userInput = await terminal.current?.getInput();
-      if (userInput === 'y') {
-        setStep(TerminalPromptStep.ASKING_WHITELIST_KEY);
-      } else if (userInput === 'n') {
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
-      } else {
-        terminal.current?.println('Unrecognized input. Please try again.');
-        await advanceStateFromAskHasWhitelistKey(terminal);
-      }
-    },
-    []
-  );
-
-  const advanceStateFromAskWhitelistKey = useCallback(
-    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      const address = ethConnection?.getAddress();
-      if (!address) throw new Error('not logged in');
-
-      terminal.current?.println(
-        'Please enter your invite key. (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)',
-        TerminalTextStyle.Sub
-      );
-
-      const key = (await terminal.current?.getInput()) || '';
-
-      terminal.current?.print('Processing key... (this may take up to 30s)');
-      const txHash = await callRegisterUntilWhitelisted(key, address, terminal);
-      terminal.current?.newline();
-
-      if (!txHash) {
-        terminal.current?.println('ERROR: Not a valid key.', TerminalTextStyle.Red);
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
-      } else {
-        terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
-        terminal.current?.print(`Welcome, player `);
-        terminal.current?.println(address, TerminalTextStyle.Text);
-        terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
-        terminal.current?.printLink(
-          '(View Transaction)',
-          () => {
-            window.open(`${BLOCK_EXPLORER_URL}/${txHash}`);
-          },
-          TerminalTextStyle.Blue
-        );
-        terminal.current?.newline();
-        setStep(TerminalPromptStep.ASKING_PLAYER_EMAIL);
-      }
-    },
-    [ethConnection]
-  );
-
-  const advanceStateFromAskWaitlistEmail = useCallback(
-    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.println(
-        'Enter your email address to sign up for the whitelist.',
-        TerminalTextStyle.Text
-      );
-      const email = (await terminal.current?.getInput()) || '';
-      terminal.current?.print('Response pending... ');
-      const response = await submitInterestedEmail(email);
-      if (response === EmailResponse.Success) {
-        terminal.current?.println('Email successfully recorded. ', TerminalTextStyle.Green);
-        terminal.current?.println(
-          'Keep an eye out for updates and invite keys in the next few weeks. Press ENTER to return to the homepage.',
-          TerminalTextStyle.Sub
-        );
-        setStep(TerminalPromptStep.TERMINATED);
-        (await await terminal.current?.getInput()) || '';
-        history.push('/');
-      } else if (response === EmailResponse.Invalid) {
-        terminal.current?.println('Email invalid. Please try again.', TerminalTextStyle.Red);
-      } else {
-        terminal.current?.print('ERROR: Server error. ', TerminalTextStyle.Red);
-        terminal.current?.print('Press ENTER to return to homepage.', TerminalTextStyle.Sub);
-        (await await terminal.current?.getInput()) || '';
-        setStep(TerminalPromptStep.TERMINATED);
-        history.push('/');
-      }
-    },
-    [history]
-  );
-
-  const advanceStateFromAskPlayerEmail = useCallback(
-    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      const address = ethConnection?.getAddress();
-      if (!address) throw new Error('not logged in');
-
-      terminal.current?.print('Enter your email address. ', TerminalTextStyle.Text);
-      terminal.current?.println("We'll use this email address to notify you if you win a prize.");
-
-      const email = (await terminal.current?.getInput()) || '';
-      const response = await submitPlayerEmail(await ethConnection?.signMessageObject({ email }));
-
-      if (response === EmailResponse.Success) {
-        terminal.current?.println('Email successfully recorded.');
-        setStep(TerminalPromptStep.FETCHING_ETH_DATA);
-      } else if (response === EmailResponse.Invalid) {
-        terminal.current?.println('Email invalid.', TerminalTextStyle.Red);
-        advanceStateFromAskPlayerEmail(terminal);
-      } else {
-        terminal.current?.println('Error recording email.', TerminalTextStyle.Red);
-        setStep(TerminalPromptStep.FETCHING_ETH_DATA);
-      }
-    },
-    [ethConnection]
   );
 
   const advanceStateFromFetchingEthData = useCallback(
@@ -523,14 +294,6 @@ export function GameLandingPage() {
 
         terminal.current?.print(
           'Network under heavy load. Please refresh the page, and check ',
-          TerminalTextStyle.Red
-        );
-
-        terminal.current?.printLink(
-          'https://blockscout.com/poa/xdai/',
-          () => {
-            window.open('https://blockscout.com/poa/xdai/');
-          },
           TerminalTextStyle.Red
         );
 
@@ -646,14 +409,6 @@ export function GameLandingPage() {
 
       terminal.current?.newline();
 
-      terminal.current?.println('We collect a minimal set of statistics such as SNARK proving');
-      terminal.current?.println('times and average transaction times across browsers, to help ');
-      terminal.current?.println('us optimize performance and fix bugs. You can opt out of this');
-      terminal.current?.println('in the Settings pane.');
-      terminal.current?.println('');
-
-      terminal.current?.newline();
-
       terminal.current?.println('Press ENTER to find a home planet. This may take up to 120s.');
       terminal.current?.println('This will consume a lot of CPU.');
 
@@ -751,14 +506,6 @@ export function GameLandingPage() {
         await advanceStateFromImportAccount(terminal);
       } else if (step === TerminalPromptStep.ACCOUNT_SET) {
         await advanceStateFromAccountSet(terminal);
-      } else if (step === TerminalPromptStep.ASKING_HAS_WHITELIST_KEY) {
-        await advanceStateFromAskHasWhitelistKey(terminal);
-      } else if (step === TerminalPromptStep.ASKING_WHITELIST_KEY) {
-        await advanceStateFromAskWhitelistKey(terminal);
-      } else if (step === TerminalPromptStep.ASKING_WAITLIST_EMAIL) {
-        await advanceStateFromAskWaitlistEmail(terminal);
-      } else if (step === TerminalPromptStep.ASKING_PLAYER_EMAIL) {
-        await advanceStateFromAskPlayerEmail(terminal);
       } else if (step === TerminalPromptStep.FETCHING_ETH_DATA) {
         await advanceStateFromFetchingEthData(terminal);
       } else if (step === TerminalPromptStep.ASK_ADD_ACCOUNT) {
@@ -781,10 +528,6 @@ export function GameLandingPage() {
       advanceStateFromAddAccount,
       advanceStateFromAllChecksPass,
       advanceStateFromAskAddAccount,
-      advanceStateFromAskHasWhitelistKey,
-      advanceStateFromAskPlayerEmail,
-      advanceStateFromAskWaitlistEmail,
-      advanceStateFromAskWhitelistKey,
       advanceStateFromCompatibilityPassed,
       advanceStateFromComplete,
       advanceStateFromDisplayAccounts,

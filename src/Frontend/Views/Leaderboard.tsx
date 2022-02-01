@@ -2,7 +2,6 @@ import { ArtifactRarity, Leaderboard } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spacer } from '../Components/CoreUI';
-import { TwitterLink } from '../Components/Labels/Labels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Red } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
@@ -43,11 +42,7 @@ function scoreToString(score?: number | null) {
 // component
 function playerToEntry(playerStr: string, color: string) {
   // if this is an address
-  if (playerStr.startsWith('0x') && playerStr.length === 42) {
-    return <TextPreview text={playerStr} focusedWidth={'150px'} unFocusedWidth={'150px'} />;
-  }
-
-  return <TwitterLink twitter={playerStr} color={color} />;
+  return <TextPreview text={playerStr} focusedWidth={'150px'} unFocusedWidth={'150px'} />;
 }
 
 function getRankColor([rank, score]: [number, number | undefined]) {
@@ -161,10 +156,6 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
   });
 
   const rows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
-    if (typeof entry.twitter === 'string') {
-      return [entry.twitter, entry.score];
-    }
-
     return [entry.ethAddress, entry.score];
   });
 

@@ -312,14 +312,6 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.addAccount(coords);
   }
 
-  public verifyTwitter(twitter: string): Promise<boolean> {
-    return this.gameManager.submitVerifyTwitter(twitter);
-  }
-
-  public disconnectTwitter(twitter: string) {
-    return this.gameManager.submitDisconnectTwitter(twitter);
-  }
-
   public getPluginManager(): PluginManager {
     return this.plugins;
   }
@@ -630,10 +622,6 @@ class GameUIManager extends EventEmitter {
 
   public getAccount(): EthAddress | undefined {
     return this.gameManager.getAccount();
-  }
-
-  public getTwitter(address: EthAddress | undefined): string | undefined {
-    return this.gameManager.getTwitter(address);
   }
 
   public getEndTimeSeconds(): number {
@@ -1130,10 +1118,6 @@ class GameUIManager extends EventEmitter {
 
   public getHashesPerSec(): number {
     return this.gameManager.getHashesPerSec();
-  }
-
-  public generateVerificationTweet(twitter: string): Promise<string> {
-    return this.gameManager.getSignedTwitter(twitter);
   }
 
   public getPerlinThresholds(): [number, number, number] {

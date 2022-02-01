@@ -1,5 +1,7 @@
 # Dark Forest Client
 
+TODO: where to ENVs get populated?
+
 ## Development Guide
 
 ### Installing Core Dependencies

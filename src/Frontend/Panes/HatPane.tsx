@@ -78,12 +78,12 @@ export function HatPane({
         <div className='margin-top'>
           <Sub>Next Level Cost</Sub>
           <span>
-            {getHatCostEth(planet)} USD <Sub>/</Sub> {getHatCostEth(planet)} DAI
+            {getHatCostEth(planet)} WGM
           </span>
         </div>
         <div>
           <Sub>Current Balance</Sub>
-          <span>{balanceEth} xDAI</span>
+          <span>{balanceEth} WGM</span>
         </div>
 
         <EmSpacer height={1} />

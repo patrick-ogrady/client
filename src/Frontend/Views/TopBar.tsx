@@ -8,7 +8,6 @@ import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { usePlayer, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
-import { ModalTwitterVerifyIcon } from './ModalIcon';
 import { ModalHook } from './ModalPane';
 import { NetworkHealth } from './NetworkHealth';
 
@@ -51,24 +50,13 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
   const uiManager = useUIManager();
   const player = usePlayer(uiManager);
   const account = player.value?.address;
-  const twitter = player.value?.twitter;
 
   return (
     <TopBarContainer>
       <AlignCenterHorizontally style={{ width: '100%', justifyContent: 'space-between' }}>
         <EmSpacer width={1} />
-        <AccountLabel includeAddressIfHasTwitter={true} />
+        <AccountLabel includeAddressIfHasTwitter={false} />
         <EmSpacer width={1} />
-        <ModalTwitterVerifyIcon
-          small
-          hook={twitterVerifyHook}
-          style={{
-            width: !twitter ? '100px' : '1.5em',
-            height: !twitter ? '2em' : '1.5em',
-            border: !twitter ? undefined : 'none',
-          }}
-          text={!twitter ? 'Connect' : undefined}
-        />
         <EmSpacer width={1} />
         <BoardPlacement account={account} />
         <EmSpacer width={1} />
