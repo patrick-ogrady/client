@@ -50,7 +50,6 @@ import {
 import {
   ArtifactNameLink,
   CenterChunkLink,
-  FAQ04Link,
   PlanetNameLink,
   TxLink,
 } from '../Components/Text';
@@ -507,9 +506,9 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.BalanceEmpty,
       <span>
-        Your xDAI account is out of balance!
+        Your WGM account is out of balance!
         <br />
-        Click <FAQ04Link>here</FAQ04Link> to learn how to get more.
+        Reload to continue playing!
       </span>
     );
   }

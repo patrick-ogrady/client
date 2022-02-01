@@ -97,10 +97,10 @@ module.exports = {
     // The string values are fallbacks if the env variable is not set
     new EnvironmentPlugin({
       NODE_ENV: 'development',
-      DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
-      CONVERSATION_API_HOST: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
-      LEADERBOARD_API: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
-      WEBSERVER_URL: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
+      DEFAULT_RPC: 'https://api.trywagmi.xyz/rpc',
+      CONVERSATION_API_HOST: 'http://localhost:3000',
+      LEADERBOARD_API: 'http://localhost:3000',
+      WEBSERVER_URL: 'http://localhost:3000',
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

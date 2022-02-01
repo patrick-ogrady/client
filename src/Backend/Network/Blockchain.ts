@@ -102,14 +102,13 @@ export async function loadScoringContract(
 }
 
 export function getEthConnection(): Promise<EthConnection> {
-  // TODO: SET WAGMI API HERE
   const isProd = process.env.NODE_ENV === 'production';
   const defaultUrl = process.env.DEFAULT_RPC as string;
 
   let url: string;
 
   if (isProd) {
-    url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || defaultUrl;
+    url = localStorage.getItem('WAGMI_RPC_ENDPOINT') || defaultUrl;
   } else {
     url = 'http://localhost:8545';
   }

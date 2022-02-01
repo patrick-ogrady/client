@@ -124,10 +124,6 @@ export function CenterChunkLink({ chunk, children }: { chunk: Chunk; children: R
   return <Link onClick={() => Viewport.getInstance().centerChunk(chunk)}>{children}</Link>;
 }
 
-export function FAQ04Link({ children }: { children: React.ReactNode }) {
-  return <Link to={'https://blog.zkga.me/df-04-faq'}>{children} </Link>;
-}
-
 export const LongDash = () => (
   <span style={{ transform: 'scale(1.5, 1)', display: 'inline-block' }}>-</span>
 );
