@@ -267,7 +267,8 @@ export function GameLandingPage() {
             await requestDevFaucet(address);
           }
         } else {
-          terminal.current?.println('To start playing, make sure to send some balance!', TerminalTextStyle.Red);
+          terminal.current?.println('To start playing, make sure to send some WGM!', TerminalTextStyle.Red);
+          terminal.current?.println('In WAGMI Round 1, there is no whitelist. You can start playing as soon as you fund your account.', TerminalTextStyle.Blue);
         }
         setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {
