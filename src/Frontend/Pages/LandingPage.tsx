@@ -141,6 +141,9 @@ const IconLinks = styled.span`
     transition: color 0.2s;
     &:hover {
       cursor: pointer;
+      &.link-twitter {
+        color: ${dfstyles.colors.icons.twitter};
+      }
       &.link-github {
         color: ${dfstyles.colors.icons.github};
       }
