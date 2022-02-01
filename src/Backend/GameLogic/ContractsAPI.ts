@@ -206,7 +206,7 @@ export class ContractsAPI extends EventEmitter {
     if (balance.lt(ContractsAPI.MIN_BALANCE)) {
       const notifsManager = NotificationManager.getInstance();
       notifsManager.balanceEmpty();
-      throw new Error(`WGM balance too low! Send some balance to your burner address: ${address}`);
+      throw new Error(`WGM balance too low! Send some WGM to your burner address: ${address}`);
     }
 
     const gasFeeGwei = EthersBN.from(txRequest.overrides.gasPrice || '1000000000');
