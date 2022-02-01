@@ -228,7 +228,7 @@ class GameManager extends EventEmitter {
    * @todo change this to the correct timestamp each round.
    */
   // TODO: update to something more accurate or remove
-  private readonly endTimeSeconds: number = 1743587533; // jan 2022
+  private readonly endTimeSeconds: number = 1646121600; // march 2022
 
   /**
    * An interface to the blockchain that is a little bit lower-level than {@link ContractsAPI}. It
