@@ -86,10 +86,6 @@ export function HatPane({
           <span>{balanceEth} WGM</span>
         </div>
 
-        <EmSpacer height={1} />
-        <Link to={'https://blog.zkga.me/df-04-faq'}>Get More xDai</Link>
-        <EmSpacer height={0.5} />
-
         <Btn
           onClick={() => {
             if (!enabled(planet) || !uiManager || !planet) return;
