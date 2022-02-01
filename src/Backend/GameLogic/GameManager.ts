@@ -1,5 +1,4 @@
 import {
-  BLOCK_EXPLORER_URL,
   MIN_PLANET_LEVEL,
   PLANET_CLAIM_MIN_LEVEL,
 } from '@darkforest_eth/constants';
@@ -572,7 +571,7 @@ class GameManager extends EventEmitter {
 
     const persistentChunkStore = await PersistentChunkStore.create(account);
 
-    terminal.current?.println('Downloading data from Ethereum blockchain...');
+    terminal.current?.println('Downloading data from WAGMI subnet...');
     terminal.current?.println('(the contract is very big. this may take a while)');
     terminal.current?.newline();
 
@@ -938,11 +937,8 @@ class GameManager extends EventEmitter {
 
   private onTxSubmit(unminedTx: SubmittedTx): void {
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Blue);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
     this.terminal.current?.println(`) submitted`, TerminalTextStyle.Blue);
@@ -953,11 +949,8 @@ class GameManager extends EventEmitter {
   private onTxConfirmed(unminedTx: SubmittedTx) {
     const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Green);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
     this.terminal.current?.println(`) confirmed`, TerminalTextStyle.Green);
@@ -979,11 +972,8 @@ class GameManager extends EventEmitter {
   private onTxReverted(unminedTx: SubmittedTx) {
     const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Red);
-    this.terminal.current?.printLink(
+    this.terminal.current?.print(
       `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
-      },
       TerminalTextStyle.White
     );
 

@@ -1,4 +1,3 @@
-import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
@@ -267,6 +266,8 @@ export function GameLandingPage() {
           if (balance === 0) {
             await requestDevFaucet(address);
           }
+        } else {
+          terminal.current?.println('To start playing, make sure to send some balance!', TerminalTextStyle.Red);
         }
         setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {
