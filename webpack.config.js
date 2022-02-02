@@ -99,6 +99,7 @@ module.exports = {
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://api.trywagmi.xyz/rpc',
       CONVERSATION_API_HOST: 'http://localhost:3000',
+      // TODO: change LEADERBOARD_API to be graph
       LEADERBOARD_API: 'http://localhost:3000',
       WEBSERVER_URL: 'http://localhost:3000',
     }),

@@ -3,6 +3,7 @@ import { Leaderboard } from '@darkforest_eth/types';
 const LEADERBOARD_API = process.env.LEADERBOARD_API as string;
 
 export async function loadLeaderboard(): Promise<Leaderboard> {
+  // TODO: load from graph API
   const address = `${LEADERBOARD_API}/leaderboard`;
   const res = await fetch(address, {
     method: 'GET',
