@@ -16,7 +16,11 @@ export const enum LandingPageZIndex {
 }
 
 const links = {
-  github: 'https://github.com/patrick-ogrady/darkforest-local',
+  twitter: 'http://twitter.com/darkforest_eth',
+  email: 'mailto:contact@zkga.me',
+  blog: 'https://blog.zkga.me/',
+  discord: 'https://discord.gg/2u2TN6v8r6',
+  github: 'https://github.com/darkforest-eth',
 };
 
 export default function LandingPage() {
@@ -53,6 +57,12 @@ export default function LandingPage() {
             >
               Enter
             </Btn>
+
+            <Spacer height={16} />
+
+            <p>
+              <Text>This instance of Dark Forest (WAGMI Round 1) is a fork of https://zkga.me. Much love to the original authors for their inspiring work.</Text>
+            </p>
           </Header>
 
           <EmSpacer height={3} />
@@ -60,7 +70,25 @@ export default function LandingPage() {
           <Spacer height={16} />
 
           <VariousLinksContainer>
+            <TextLinks>
+              <a href={links.email}>email</a>
+              <Spacer width={4} />
+              <Sub>-</Sub>
+              <Spacer width={8} />
+              <a href={links.blog}>blog</a>
+            </TextLinks>
+
+            <Spacer width={8} />
+
             <IconLinks>
+              <a className={'link-twitter'} href={links.twitter}>
+                <span className={'icon-twitter'}></span>
+              </a>
+              <Spacer width={8} />
+              <a className={'link-discord'} href={links.discord}>
+                <span className={'icon-discord'}></span>
+              </a>
+              <Spacer width={8} />
               <a className={'link-github'} href={links.github}>
                 <span className={'icon-github'}></span>
               </a>
@@ -145,6 +173,15 @@ const IconLinks = styled.span`
       }
       &.link-github {
         color: ${dfstyles.colors.icons.github};
+      }
+            &.link-discord {
+        color: ${dfstyles.colors.icons.discord};
+      }
+      &.link-blog {
+        color: ${dfstyles.colors.icons.blog};
+      }
+      &.link-email {
+        color: ${dfstyles.colors.icons.email};
       }
     }
   }
