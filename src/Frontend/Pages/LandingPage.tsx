@@ -95,6 +95,7 @@ export default function LandingPage() {
             </IconLinks>
           </VariousLinksContainer>
         </MainContentContainer>
+        <LeadboardDisplay />
       </Page>
     </>
   );

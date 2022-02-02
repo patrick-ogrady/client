@@ -110,7 +110,7 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
 }
 
 // TODO: update this each round, or pull from contract constants
-const roundEndTimestamp = '2021-10-05T04:00:00.000Z';
+const roundEndTimestamp = '2022-03-01T00:00:00.000Z';
 const roundEndTime = new Date(roundEndTimestamp).getTime();
 
 function CountDown() {
@@ -161,27 +161,17 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
 
   return (
     <div>
+      <Title>Top 50 Players</Title>
       <StatsTableContainer>
         <StatsTable>
           <tbody>
             <tr>
-              <td>round 4 complete</td>
-              <td>
-                <CountDown />
-              </td>
-            </tr>
-            <tr>
-              <td>players</td>
-              <td>{leaderboard.entries.length}</td>
-            </tr>
-            <tr>
-              <td>ranked players</td>
-              <td>{rankedPlayers.length}</td>
+              <td>time remaining (hours)</td>
+              <td>{CountDown()}</td>
             </tr>
           </tbody>
         </StatsTable>
       </StatsTableContainer>
-      <Spacer height={8} />
       <LeaderboardTable rows={rows} />
     </div>
   );
@@ -204,6 +194,11 @@ const StatsTableContainer = styled.div`
   justify-content: center;
   align-items: center;
   color: ${dfstyles.colors.text};
+`;
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StatsTable = styled.table`

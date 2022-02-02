@@ -99,8 +99,7 @@ module.exports = {
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://api.trywagmi.xyz/rpc',
       CONVERSATION_API_HOST: 'http://localhost:3000',
-      // TODO: change LEADERBOARD_API to be graph
-      LEADERBOARD_API: 'http://localhost:3000',
+      LEADERBOARD_API: 'https://graph.trywagmi.xyz/subgraphs/id/QmSZXQw2MghdVuGjheYTjJkND37tM7UXPM3An7HnzJigZf',
       WEBSERVER_URL: 'http://localhost:3000',
     }),
     new CleanWebpackPlugin(),

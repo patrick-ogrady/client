@@ -2,11 +2,26 @@ import { Leaderboard } from '@darkforest_eth/types';
 
 const LEADERBOARD_API = process.env.LEADERBOARD_API as string;
 
+function leaderboardQuery() {
+  return `
+{
+  entries: players(orderBy:"score", orderDirection:desc, where:{score_gt:0}, first:50) {
+    ethAddress: id
+    score
+  }
+}
+  `;
+}
+
 export async function loadLeaderboard(): Promise<Leaderboard> {
-  // TODO: load from graph API
-  const address = `${LEADERBOARD_API}/leaderboard`;
+  const address = `${LEADERBOARD_API}`;
   const res = await fetch(address, {
-    method: 'GET',
+    method: 'POST',
+    body:JSON.stringify({query: leaderboardQuery()}),
+    headers: {
+			'Content-Type': 'application/json',
+			Accept: 'application/json',
+		},
   });
 
   const rep = await res.json();
@@ -15,5 +30,5 @@ export async function loadLeaderboard(): Promise<Leaderboard> {
     throw new Error(rep.error);
   }
 
-  return rep;
+  return rep.data;
 }
