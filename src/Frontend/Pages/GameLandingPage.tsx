@@ -118,6 +118,7 @@ export function GameLandingPage() {
       terminal.current?.newline();
       terminal.current?.printElement(<MythicLabelText text={`                 Dark Forest`} />);
       terminal.current?.newline();
+      terminal.current?.println(`This instance of Dark Forest (WAGMI Round 1) is a fork of https://zkga.me. Much love to the original authors for their inspiring work.`, TerminalTextStyle.Blue);
       terminal.current?.newline();
 
       const accounts = getAccounts();
